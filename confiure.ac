@@ -1,0 +1,18 @@
+## autoconf/configure script for rmkl
+## Copyright (c) 2013-2022, Ching-Chuan Chen
+
+# Process this file with autoconf to produce a configure script.
+AC_INIT([rmkl], [0.1.0], [zw12356@gmail.com])
+
+# Ensure C++ is set up as R expects
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+    AC_MSG_ERROR([Could not determine R_HOME.])
+fi
+
+###### DOWNLOAD INTEL MKL FROM ANACONDA ######################################
+
+AC_MSG_CHECKING([whether Intel MKL library can be downloaded from Anaconda])
+   "${R_PATH}" --vanilla --slave -e "source(\"R/install.R\")"
+
+AC_OUTPUT

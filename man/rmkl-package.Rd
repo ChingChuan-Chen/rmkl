@@ -3,8 +3,11 @@
 \docType{package}
 \name{rmkl-package}
 \alias{rmkl-package}
-\title{The `rmkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO)
+\title{`rmkl` Package}
+\description{
+The `rmkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO)
 by leveraging the conda packages, `mkl`, `mkl-include` and `intel-openmp`.
 However, it does not like MRO or `ropenblas` to directly affect R functions.
 `rmkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users.
-`rmkl` supports windows/OS X/Linux.}
+`rmkl` supports windows/OS X/Linux.
+}

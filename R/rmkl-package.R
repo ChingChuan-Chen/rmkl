@@ -15,6 +15,8 @@
 ## You should have received a copy of the GNU General Public License
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
+#' `rmkl` Package
+#'
 #' The `rmkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO)
 #' by leveraging the conda packages, `mkl`, `mkl-include` and `intel-openmp`.
 #' However, it does not like MRO or `ropenblas` to directly affect R functions.
