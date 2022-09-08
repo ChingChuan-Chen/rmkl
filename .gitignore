@@ -37,3 +37,18 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+src/*.o
+src/*.dll
+src/*.so
+src/*.dylib
+inst/lib/*/*.dll
+inst/lib/*/*.pdb
+inst/lib/*/*.spv
+inst/lib/*.dylib
+inst/lib/*.so
+inst/include/mkl
+libs
+src-i386
+src-x64
+*.bz2

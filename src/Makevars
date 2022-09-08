@@ -1,0 +1,2 @@
+PKG_CXXFLAGS=-I../inst/include -I../inst/include/mkl
+PKG_LIBS=-L../inst/lib -lmkl_rt -lmkl_intel_thread -lmkl_core -liomp5md $(FLIBS)
