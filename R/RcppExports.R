@@ -9,25 +9,55 @@
 #' @examples
 #' x <- matrix(rnorm(1e4), 100)
 #' y <- matrix(rnorm(1e2), 100)
-#' XtX <- fMatProd(x, t(x))
+#' z <- matrix(rnorm(1e4), 100)
+#' XtX <- fMatProd(t(x), x)
+#' XtX2 <- fMatTransProd(x, x)
+#' all.equal(XtX, XtX2) # TRUE
 #' invXtX <- fMatInv(XtX)
 #' invXtXy <- fMatSolve(XtX, y)
-#' @name fast_mat_ops
+#' fMatAdd(x, z) # x + z
+#' fMatSubtract(x, z) # x - z
+#' fMatSumDiffSquared(x, z) # sum((x-z)^2)
+#' @name fast_matrix_ops
 #' @export
 fMatProd <- function(x, y) {
     .Call('_rmkl_fMatProd', PACKAGE = 'rmkl', x, y)
 }
 
-#' @name fast_mat_ops
+#' @name fast_matrix_ops
+#' @export
+fMatTransProd <- function(x, y) {
+    .Call('_rmkl_fMatTransProd', PACKAGE = 'rmkl', x, y)
+}
+
+#' @name fast_matrix_ops
 #' @export
 fMatSolve <- function(x, y) {
     .Call('_rmkl_fMatSolve', PACKAGE = 'rmkl', x, y)
 }
 
-#' @name fast_mat_ops
+#' @name fast_matrix_ops
 #' @export
 fMatInv <- function(x) {
     .Call('_rmkl_fMatInv', PACKAGE = 'rmkl', x)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatAdd <- function(x, y) {
+    .Call('_rmkl_fMatAdd', PACKAGE = 'rmkl', x, y)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatSubtract <- function(x, y) {
+    .Call('_rmkl_fMatSubtract', PACKAGE = 'rmkl', x, y)
+}
+
+#' @name fast_matrix_ops
+#' @export
+fMatSumDiffSquared <- function(x, y) {
+    .Call('_rmkl_fMatSumDiffSquared', PACKAGE = 'rmkl', x, y)
 }
 
 #' Function to get the version of Intel MKL

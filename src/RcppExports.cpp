@@ -24,6 +24,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fMatTransProd
+arma::mat fMatTransProd(const arma::mat& x, const arma::mat& y);
+RcppExport SEXP _rmkl_fMatTransProd(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatTransProd(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fMatSolve
 arma::mat fMatSolve(const arma::mat& x, const arma::mat& y);
 RcppExport SEXP _rmkl_fMatSolve(SEXP xSEXP, SEXP ySEXP) {
@@ -44,6 +56,42 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(fMatInv(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatAdd
+arma::mat fMatAdd(const arma::mat& x, const arma::mat& y);
+RcppExport SEXP _rmkl_fMatAdd(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatAdd(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSubtract
+arma::mat fMatSubtract(const arma::mat& x, const arma::mat& y);
+RcppExport SEXP _rmkl_fMatSubtract(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSubtract(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSumDiffSquared
+double fMatSumDiffSquared(const arma::mat& x, const arma::mat& y);
+RcppExport SEXP _rmkl_fMatSumDiffSquared(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSumDiffSquared(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -81,8 +129,12 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rmkl_fMatProd", (DL_FUNC) &_rmkl_fMatProd, 2},
+    {"_rmkl_fMatTransProd", (DL_FUNC) &_rmkl_fMatTransProd, 2},
     {"_rmkl_fMatSolve", (DL_FUNC) &_rmkl_fMatSolve, 2},
     {"_rmkl_fMatInv", (DL_FUNC) &_rmkl_fMatInv, 1},
+    {"_rmkl_fMatAdd", (DL_FUNC) &_rmkl_fMatAdd, 2},
+    {"_rmkl_fMatSubtract", (DL_FUNC) &_rmkl_fMatSubtract, 2},
+    {"_rmkl_fMatSumDiffSquared", (DL_FUNC) &_rmkl_fMatSumDiffSquared, 2},
     {"_rmkl_getMKLVersion", (DL_FUNC) &_rmkl_getMKLVersion, 0},
     {"_rmkl_setMKLThreads", (DL_FUNC) &_rmkl_setMKLThreads, 1},
     {"_rmkl_getMKLThreads", (DL_FUNC) &_rmkl_getMKLThreads, 0},
