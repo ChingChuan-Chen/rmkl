@@ -15,14 +15,30 @@
 ## You should have received a copy of the GNU General Public License
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
-installMKL <- function(mklVersion, rArch = .Platform$r_arch) {
+installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c()) {
   sysname <- Sys.info()[["sysname"]]
+  if (sysname == "Windows") {
+    # check whether there is another R-Arch
+    rArchList <- setdiff(list.dirs(
+      paste0(R.home(), "/bin"), recursive = FALSE, full.names = FALSE
+    ), downloadedRArch)
+  	if (length(rArchList) > 1) {
+        anotherRArch <- setdiff(rArchList, rArch)
+  	} else {
+  	  anotherRArch <- ""
+  	}
+  } else {
+	  anotherRArch <- ""
+	}
 
   # check whether to download MKL from Anaconda
   if (file.exists("inst/include/mkl/mkl.h")) {
     if (sysname == "Windows" && file.exists(paste0("inst/lib/", rArch, "/mkl_core.2.dll")) &&
         file.exists(paste0("inst/lib/", rArch, "/libiomp5md.dll"))) {
-      cat("Intel MKL library has downloaded.\n")
+      cat(paste0("Intel MKL library for ", rArch, " has downloaded.\n"))
+      if (anotherRArch != "") {
+        installMKL(mklVersion, anotherRArch, rArch)
+      }
       return(invisible(NULL))
     } else if (sysname != "Windows" && file.exists("inst/lib/libmkl_core.so.2") &&
                file.exists("inst/lib/libiomp5.so")) {
@@ -126,13 +142,10 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch) {
     file.rename("inst/lib/bin", libDir)
   }
 
-  if (sysname == "Windows") {
-    # build i386 if there is an i386 R
-    rArchList <- list.dirs(paste0(R.home(), "/bin"), recursive = FALSE, full.names = FALSE)
-    anotherRArch <- setdiff(rArchList, rArch)
-    if (length(anotherRArch) > 0) {
-      installMKL(mklVersion, anotherRArch)
-    }
+  # download Intel MKL for another arch on Windows
+  if (sysname == "Windows" && anotherRArch != "") {
+    installMKL(mklVersion, anotherRArch, rArch)
   }
+
   cat("Intel MKL is downloaded successfully!\n")
 }
