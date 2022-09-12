@@ -17,7 +17,7 @@ Description: The `rmkl` package aims to empower R with Intel MKL like Microsoft 
 Depends: R (>= 4.0.0)
 Imports: utils, Rcpp (>= 1.0.0)
 LinkingTo: Rcpp, RcppArmadillo
-Suggest: pkgbuild
+Suggest: pkgbuild, pkgKitten
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

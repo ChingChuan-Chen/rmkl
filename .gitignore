@@ -47,8 +47,14 @@ inst/lib/*/*.pdb
 inst/lib/*/*.spv
 inst/lib/*.dylib
 inst/lib/*.so
+inst/lib/*.so.2
+inst/lib/*.cat
+inst/lib/*.bc
+inst/lib/*.o
+inst/lib/*.spv
 inst/include/mkl
 libs
 src-i386
 src-x64
 *.bz2
+autom4te.cache

@@ -1,16 +1,42 @@
-installMKL <- function(mklVersion) {
-  if (!dir.exists("inst/lib")) {
-    dir.create("inst/lib")
-  }
+## Copyright (C) 2022             Ching-Chuan Chen
+##
+## This file is part of rmkl.
+##
+## rmkl is free software: you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 2 of the License, or
+## (at your option) any later version.
+##
+## rmkl is distributed in the hope that it will be useful, but
+## WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
+installMKL <- function(mklVersion) {
   sysname <- Sys.info()[["sysname"]]
   rArch <- .Platform$r_arch
+
+  if (file.exists("inst/include/mkl/mkl.h")) {
+    if (sysname == "Windows" && file.exists("inst/lib/x64/mkl_core.2.dll") &&
+        file.exists("inst/lib/x64/libiomp5md.dll")) {
+      return(NULL)
+    } else if (sysname != "Windows" && file.exists("inst/lib/libmkl_core.so.2") &&
+               file.exists("inst/lib/libiomp5.so")) {
+      return("mkl libraries are downloaded.")
+    }
+  }
 
   repodataBaseUrl <- "https://conda-static.anaconda.org/anaconda/%s/repodata.json"
   if (sysname == "Windows") {
     condaArch <- paste0("win-", ifelse(rArch == "x64", 64, 32))
+    if (!dir.exists("inst/lib")) {
+      dir.create("inst/lib")
+    }
   } else if (sysname == "Linux") {
-    condaArch <- paste0("linux-", ifelse(rArch == "x64", 64, 32))
+    condaArch <- "linux-64"
   } else if (sysname == "Darwin") {
     condaArch <- "osx-64"
   } else {
@@ -54,15 +80,28 @@ installMKL <- function(mklVersion) {
   downloadFileBaseUrl <- "https://anaconda.org/anaconda/%s/%s/download/%s/%s"
   apply(downloadFns, 1, function(v){
     bzFile <- file.path(tempDir, paste0(v[3], ".tar.bz2"))
-    cat(sprintf("Download %s.tar.gz from Anaconda repo...\n", v[1]))
+    cat(sprintf("Download %s from Anaconda repo...\n", v[1]))
     download.file(sprintf(downloadFileBaseUrl, v[3], v[2], condaArch, v[1]), bzFile, quiet = TRUE)
     destDir <- paste0(tempDir, "/", v[3])
-    cat(sprintf("Untar %s.tar.gz and copy...\n", v[1]))
+    cat(sprintf("Untar %s and copy...\n", v[1]))
     untar(bzFile, exdir = destDir)
+    if (sysname != "Windows") {
+      Sys.chmod(list.dirs(destDir), "777")
+      f <- list.files(destDir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+      Sys.chmod(f, (file.info(f)$mode | "664"))
+    }
     if (grepl("include", v[3])) {
-      file.copy(paste0(destDir, "/Library/include/"), "inst/include", recursive = TRUE)
+      if (sysname == "Windows") {
+        file.copy(paste0(destDir, "/Library/include/"), "inst/include", recursive = TRUE)
+      } else {
+        file.copy(paste0(destDir, "/include/"), "inst/include", recursive = TRUE)
+      }
     } else {
-      file.copy(paste0(destDir, "/Library/bin/"), "inst/lib", recursive = TRUE)
+      if (sysname == "Windows") {
+        file.copy(paste0(destDir, "/Library/bin/"), "inst/lib", recursive = TRUE)
+      } else {
+        file.copy(paste0(destDir, "/lib"), "inst", recursive = TRUE)
+      }
     }
   })
 
@@ -71,8 +110,10 @@ installMKL <- function(mklVersion) {
   unlink(incDir, recursive = TRUE)
   file.rename("inst/include/include", incDir)
 
-  cat("Copy and rename lib folder...\n")
-  libDir <- paste(c("inst", "lib", if (nzchar(rArch)) rArch), collapse = "/")
-  unlink(libDir, recursive = TRUE)
-  file.rename("inst/lib/bin", libDir)
+  if (sysname == "Windows") {
+    cat("Copy and rename lib folder...\n")
+    libDir <- paste(c("inst", "lib", if (nzchar(rArch)) rArch), collapse = "/")
+    unlink(libDir, recursive = TRUE)
+    file.rename("inst/lib/bin", libDir)
+  }
 }

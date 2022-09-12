@@ -1,2 +1,2 @@
 PKG_CXXFLAGS=-I../inst/include -I../inst/include/mkl
-PKG_LIBS=-L../inst/lib$(R_ARCH) -lmkl_rt.2 -lmkl_intel_thread.2 -lmkl_core.2 -liomp5md $(FLIBS)
+PKG_LIBS=-L../inst/lib$(R_ARCH) -Wl,--no-as-needed -lmkl_rt.2 -lmkl_intel_thread.2 -lmkl_core.2 -liomp5md $(FLIBS)

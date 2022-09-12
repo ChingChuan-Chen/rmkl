@@ -1,3 +1,20 @@
+## Copyright (C) 2022             Ching-Chuan Chen
+##
+## This file is part of rmkl.
+##
+## rmkl is free software: you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 2 of the License, or
+## (at your option) any later version.
+##
+## rmkl is distributed in the hope that it will be useful, but
+## WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
+
 #' @importFrom utils package.skeleton packageDescription
 #' @export
 rmkl.package.skeleton <- function(name = "anRpackage",
@@ -48,13 +65,16 @@ rmkl.package.skeleton <- function(name = "anRpackage",
   ## Add Rcpp to the DESCRIPTION
   DESCRIPTION <- file.path(root, "DESCRIPTION")
   if (file.exists(DESCRIPTION)) {
-    x <- cbind(read.dcf(DESCRIPTION),
-               "Imports" = sprintf("Rcpp (>= %s)",
-                                   packageDescription("Rcpp")[["Version"]]),
-               "LinkingTo" = "Rcpp")
+    x <- cbind(
+      read.dcf(DESCRIPTION),
+      "Imports" = sprintf("Rcpp (>= %s), rmkl",
+                          packageDescription("Rcpp")[["Version"]],
+                          packageDescription("rmkl")[["Version"]]),
+      "LinkingTo" = "Rcpp, rmkl"
+    )
     write.dcf(x, file = DESCRIPTION)
-    message(" >> added Imports: Rcpp")
-    message(" >> added LinkingTo: Rcpp")
+    message(" >> added Imports: Rcpp, rmkl")
+    message(" >> added LinkingTo: Rcpp, rmkl")
   }
 
   ## add a useDynLib to NAMESPACE,
