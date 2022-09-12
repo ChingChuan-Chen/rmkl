@@ -31,6 +31,14 @@ rsession-ld-library-path=${rmklLibPath}:\$LD_LIBRARY_PATH
 EOF
 ```
 
+### Roadmap
+
+- [x] Support Windows.
+- [x] Support Linux.
+- [ ] GitHub Actions to release binary packages.
+- [ ] Validate on Mac OS X with Intel/M1/M2.
+- [ ] On the CRAN (Probably not).
+
 ### License
 
 The `rmkl` package is made available under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) license.
