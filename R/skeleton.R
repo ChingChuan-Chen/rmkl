@@ -26,7 +26,7 @@ rmkl.package.skeleton <- function(
     stop("You need to install R package pkgKitten before using rmkl.package.skeleton!")
   }
 
-  if(!requireNamespace("energy")) {
+  if(!requireNamespace("roxygen2")) {
     stop("You need to install R package roxygen2 before using rmkl.package.skeleton!")
   }
 
