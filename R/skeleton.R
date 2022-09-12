@@ -100,11 +100,14 @@ rmkl.package.skeleton <- function(
   compileAttributes(root)
   message(" >> inoked Rcpp::compileAttributes to create wrappers")
 
-  ## call roxygen2::roxygenize to output cpp functions
+  ## call roxygen2::roxygenize to output documents
   roxygen2::roxygenize(root)
   message(" >> inoked roxygen2::roxygenize to generate documents")
+
+  ## call roxygen2::roxygenize to rewrite NAMESPACE
   file.remove(file.path(root, "NAMESPACE"))
   roxygen2::roxygenize(root)
+  message(" >> inoked roxygen2::roxygenize to rewrite NAMESPACE")
 
   invisible(NULL)
 }
