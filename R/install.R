@@ -22,10 +22,12 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch) {
   if (file.exists("inst/include/mkl/mkl.h")) {
     if (sysname == "Windows" && file.exists(paste0("inst/lib/", rArch, "/mkl_core.2.dll")) &&
         file.exists(paste0("inst/lib/", rArch, "/libiomp5md.dll"))) {
-      return("mkl libraries are downloaded.")
+      cat("Intel MKL library has downloaded.\n")
+      return(invisible(NULL))
     } else if (sysname != "Windows" && file.exists("inst/lib/libmkl_core.so.2") &&
                file.exists("inst/lib/libiomp5.so")) {
-      return("mkl libraries are downloaded.")
+      cat("Intel MKL library has downloaded.\n")
+      return(invisible(NULL))
     }
   }
 
@@ -132,4 +134,5 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch) {
       installMKL(mklVersion, anotherRArch)
     }
   }
+  cat("Intel MKL is downloaded successfully!\n")
 }

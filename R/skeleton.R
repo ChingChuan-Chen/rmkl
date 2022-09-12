@@ -34,7 +34,7 @@ rmkl.package.skeleton <- function(
     pkgKitten::kitten(name, path),
     error = function(e) {
       cat(paste(e, "\n")) # print error
-      stop(paste("error while calling `", skelFunName, "`", sep=""))
+      stop(paste("error while calling `pkgKitten::kitten`", sep=""))
     }
   )
 
