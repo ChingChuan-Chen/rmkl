@@ -25,9 +25,9 @@ mklCxxFlags <- function() {
 
 mklLdFlags <- function() {
   linkLibs <- if(Sys.info()[["sysname"]] == "Windows") {
-    "-lmkl_intel_thread.2 -lmkl_rt.2 -lmkl_core.2 -liomp5mp"
+    "-lmkl_intel_thread.2 -lmkl_rt.2 -lmkl_core.2 -liomp5md"
   } else {
-    "-lmkl_intel_thread -lmkl_rt -lmkl_core -liomp5mp"
+    "-lmkl_intel_thread -lmkl_rt -lmkl_core -liomp5"
   }
   sprintf("-L%s %s", mklRoot(), linkLibs)
 }
