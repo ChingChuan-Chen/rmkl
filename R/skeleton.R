@@ -15,23 +15,43 @@
 ## You should have received a copy of the GNU General Public License
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
-#' @importFrom utils package.skeleton packageDescription
+#' Create a skeleton for a new package depending on rmkl
+#'
+#' \code{rmkl.package.skeleton} automates the creation of a new source
+#' package that intends to use features of `rmkl`.
+#' It is based on the \link[pkgKitten]{kitten} function which it executes
+#' first and append some options for \link[roxygen2]{roxygenize} function.
+#' It will automatically generate a package document with needed `roxygen2`
+#' parameters for a packaged based on `rmkl`.
+#'
+#' @param name The name of your R package.
+#' @param path The path of your R package.
+#' @return Nothing.
+#' @seealso \link[pkgKitten]{kitten}
+#' @examples
+#' \dontrun{
+#' rmkl.package.skeleton("testRMKLPkg")
+#' }
+#' @importFrom utils packageDescription
 #' @importFrom Rcpp compileAttributes
 #' @export
 rmkl.package.skeleton <- function(
     name = "anRpackage",
     path = "."
 ) {
-  if(!requireNamespace("pkgKitten")) {
+  if(!requireNamespace("pkgKitten", quietly = TRUE)) {
     stop("You need to install R package pkgKitten before using rmkl.package.skeleton!")
   }
 
-  if(!requireNamespace("roxygen2")) {
+  if(!requireNamespace("roxygen2", quietly = TRUE)) {
     stop("You need to install R package roxygen2 before using rmkl.package.skeleton!")
   }
 
+  env <- parent.frame(1)
+  call <- match.call()
+  call[[1]] <- pkgKitten::kitten
   tryCatch(
-    pkgKitten::kitten(name, path),
+    eval(call, envir = env),
     error = function(e) {
       cat(paste(e, "\n")) # print error
       stop(paste("error while calling `pkgKitten::kitten`", sep=""))
