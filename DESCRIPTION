@@ -14,14 +14,10 @@ Description: The `rmkl` package aims to empower R with Intel MKL like Microsoft 
   However, it does not like MRO or `ropenblas` to directly affect R functions.
   `rmkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users.
   `rmkl` supports windows/OS X/Linux.
-Depends: R (>= 3.6)
-Imports:
-    utils,
-    Rcpp (>= 1.0.0)
-LinkingTo: Rcpp,
-  RcppArmadillo
-Suggest:
-  pkgbuild
+Depends: R (>= 4.0.0)
+Imports: utils, Rcpp (>= 1.0.0)
+LinkingTo: Rcpp, RcppArmadillo
+Suggest: pkgbuild
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
