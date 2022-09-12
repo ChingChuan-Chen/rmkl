@@ -18,12 +18,32 @@
 ## You should have received a copy of the GNU General Public License
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
-mklCxxFlags <- function() {
+#' Compilation flags for rmkl
+#'
+#' Output the compiler or linker flags required to build against `rmkl`.
+#' These functions are typically called from `Makevars` as follows:
+#' ```
+#' PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::CxxFlags()")
+#' PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::LdFlags()")
+#' ```
+#' \R packages using `rmkl` should also add the following to their `NAMESPACE` file:
+#' ```
+#' importFrom(rmkl, CxxFlags)
+#' importFrom(rmkl, LdFlags)
+#' ```
+#' This is necessary to ensure that \pkg{rmkl} is loaded and available.
+#'
+#' @name flags
+#' @rdname flags
+#' @aliases LdFlags CxxFlags
+NULL
+
+rmklCxxFlags <- function() {
   pkgIncDir <- system.file("include", package = "rmkl")
-  paste0("-I", pkgIncDir, " -I", pkgIncDir, "/mkl")
+  paste0("-I'", pkgIncDir, "' -I'", pkgIncDir, "/mkl'")
 }
 
-mklLdFlags <- function() {
+rmklLdFlags <- function() {
   linkLibs <- if(Sys.info()[["sysname"]] == "Windows") {
     "-lmkl_intel_thread.2 -lmkl_rt.2 -lmkl_core.2 -liomp5md"
   } else {
@@ -32,23 +52,27 @@ mklLdFlags <- function() {
   sprintf("-L%s %s", mklRoot(), linkLibs)
 }
 
+#' @name flags
+#' @export
 LdFlags <- function(){
-  cat(mklLdFlags())
+  cat(rmklLdFlags())
 }
 
+#' @name flags
+#' @export
 CxxFlags <- function(){
-  cat(mklCxxFlags())
+  cat(rmklCxxFlags())
 }
 
 #' @importFrom Rcpp Rcpp.plugin.maker
-inlineCxxPlugin <-  function() {
+inlineCxxPlugin <- function() {
   getSettings <- Rcpp.plugin.maker(
     include.before = "#include <rmkl.h>",
     libs = "$(FLIBS)",
     package = c("rmkl", "Rcpp")
   )
   settings <- getSettings()
-  settings$env$PKG_CXXFLAGS <- paste(settings$env$PKG_CXXFLAGS, mklCxxFlags())
-  settings$env$PKG_LIBS <- paste(settings$env$PKG_LIBS, mklLdFlags())
+  settings$env$PKG_CXXFLAGS <- paste(settings$env$PKG_CXXFLAGS, rmklCxxFlags())
+  settings$env$PKG_LIBS <- paste(settings$env$PKG_LIBS, rmklLdFlags())
   return(settings)
 }

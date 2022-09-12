@@ -12,7 +12,6 @@
 \alias{fMatSumDiffSquared}
 \alias{fMatDet}
 \alias{fMatSort}
-\alias{fMatUnique}
 \title{Functions to use MKL to do the matrix calculations}
 \usage{
 fMatProd(x, y)
@@ -34,8 +33,6 @@ fMatSumDiffSquared(x, y)
 fMatDet(x)
 
 fMatSort(x, dim = 1L, ascending = TRUE)
-
-fMatUnique(x)
 }
 \arguments{
 \item{x, y}{matrices}
@@ -64,4 +61,10 @@ invXtXy <- fMatSolve(XtX, y)
 fMatAdd(x, z) # x + z
 fMatSubtract(x, z) # x - z
 fMatSumDiffSquared(x, z) # sum((x-z)^2)
+
+w <- matrix(sample(9, 9), 3)
+fMatDet(w)
+fMatSort(w)
+fMatSort(w, 2)
+fMatSort(w, 2, FALSE)
 }

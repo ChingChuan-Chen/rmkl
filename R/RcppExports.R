@@ -4,6 +4,7 @@
 #' Functions to do the decomposition by leveraging Intel MKL
 #'
 #' @param upper A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.
+#' @rdname fast_matrix_decomposition
 #' @name fast_matrix_decomposition
 #' @export
 fMatChol <- function(x, upper = TRUE) {
@@ -60,6 +61,13 @@ fMatQr <- function(x, permutation_matrix = FALSE, economical = FALSE) {
 #' fMatAdd(x, z) # x + z
 #' fMatSubtract(x, z) # x - z
 #' fMatSumDiffSquared(x, z) # sum((x-z)^2)
+#'
+#' w <- matrix(sample(9, 9), 3)
+#' fMatDet(w)
+#' fMatSort(w)
+#' fMatSort(w, 2)
+#' fMatSort(w, 2, FALSE)
+#' @rdname fast_matrix_ops
 #' @name fast_matrix_ops
 #' @export
 fMatProd <- function(x, y) {
@@ -121,12 +129,6 @@ fMatDet <- function(x) {
 #' @export
 fMatSort <- function(x, dim = 1L, ascending = TRUE) {
     .Call('_rmkl_fMatSort', PACKAGE = 'rmkl', x, dim, ascending)
-}
-
-#' @name fast_matrix_ops
-#' @export
-fMatUnique <- function(x) {
-    .Call('_rmkl_fMatUnique', PACKAGE = 'rmkl', x)
 }
 
 #' Function to get the version of Intel MKL

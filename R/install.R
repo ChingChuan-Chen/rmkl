@@ -15,20 +15,21 @@
 ## You should have received a copy of the GNU General Public License
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
-installMKL <- function(mklVersion) {
+installMKL <- function(mklVersion, rArch = .Platform$r_arch) {
   sysname <- Sys.info()[["sysname"]]
-  rArch <- .Platform$r_arch
 
+  # check whether to download MKL from Anaconda
   if (file.exists("inst/include/mkl/mkl.h")) {
-    if (sysname == "Windows" && file.exists("inst/lib/x64/mkl_core.2.dll") &&
-        file.exists("inst/lib/x64/libiomp5md.dll")) {
-      return(NULL)
+    if (sysname == "Windows" && file.exists(paste0("inst/lib/", rArch, "/mkl_core.2.dll")) &&
+        file.exists(paste0("inst/lib/", rArch, "/libiomp5md.dll"))) {
+      return("mkl libraries are downloaded.")
     } else if (sysname != "Windows" && file.exists("inst/lib/libmkl_core.so.2") &&
                file.exists("inst/lib/libiomp5.so")) {
       return("mkl libraries are downloaded.")
     }
   }
 
+  # get the repodata.json (index file) from Anaconda by different system and arch
   repodataBaseUrl <- "https://conda-static.anaconda.org/anaconda/%s/repodata.json"
   if (sysname == "Windows") {
     condaArch <- paste0("win-", ifelse(rArch == "x64", 64, 32))
@@ -43,11 +44,13 @@ installMKL <- function(mklVersion) {
     stop("Sorry, your system,", sysname, ", is unsupported!")
   }
 
+  # create temporary directory and download repodata.json
   tempDir <- tempdir()
   repodataJson <- file.path(tempDir, "repodata.json")
   cat("Download repodata...\n")
   download.file(sprintf(repodataBaseUrl, condaArch), repodataJson, quiet = TRUE)
 
+  # helper function to extract strings
   extractSubstring <- function(str, pattern, general=FALSE) {
     if (general) {
       regmatches(str, gregexpr(pattern, str))[[1]]
@@ -56,17 +59,20 @@ installMKL <- function(mklVersion) {
     }
   }
 
+  # extract packages from index
   repodata <- paste0(readLines(repodataJson), collapse = "\n")
   mklPkg <- extractSubstring(repodata, sprintf('"mkl-%s[^"]+":\\s+\\{[^\\}]+\\}', mklVersion), TRUE)
   mklIncPkg <- extractSubstring(repodata, sprintf('"mkl-include-%s[^"]+":\\s+\\{[^\\}]+\\}', mklVersion), TRUE)
   intelOmpPkg <- extractSubstring(repodata, sprintf('"intel-openmp-%s[^"]+":\\s+\\{[^\\}]+\\}', mklVersion), TRUE)
 
+  # find the version string from index
   fnPattern <- '"[^:]+'
   versionPattern <- '"version":\\s+"[^"]+"'
   pkgMat <- do.call(rbind, lapply(c(mklPkg, mklIncPkg, intelOmpPkg), function(i) {
     gsub('version|:|"| ', "", c(extractSubstring(i, fnPattern), extractSubstring(i, versionPattern)))
   }))
 
+  # find the version
   if (nrow(pkgMat) > 3) {
     versionCnts <- tapply(rep(1, nrow(pkgMat)), pkgMat[,2], sum)
     downloadVersion <- max(names(versionCnts[versionCnts == 3]))
@@ -77,6 +83,7 @@ installMKL <- function(mklVersion) {
   downloadFns <- pkgMat[pkgMat[,2] == downloadVersion, ]
   downloadFns <- cbind(downloadFns, gsub("-[0-9\\.]+-[^\\.]+.tar.bz2", "", downloadFns[, 1]))
 
+  # download packages from Anaconda, un-tar and move to inst/
   downloadFileBaseUrl <- "https://anaconda.org/anaconda/%s/%s/download/%s/%s"
   apply(downloadFns, 1, function(v){
     bzFile <- file.path(tempDir, paste0(v[3], ".tar.bz2"))
@@ -115,5 +122,14 @@ installMKL <- function(mklVersion) {
     libDir <- paste(c("inst", "lib", if (nzchar(rArch)) rArch), collapse = "/")
     unlink(libDir, recursive = TRUE)
     file.rename("inst/lib/bin", libDir)
+  }
+
+  if (sysname == "Windows") {
+    # build i386 if there is an i386 R
+    rArchList <- list.dirs(paste0(R.home(), "/bin"), recursive = FALSE, full.names = FALSE)
+    anotherRArch <- setdiff(rArchList, rArch)
+    if (length(anotherRArch) > 0) {
+      installMKL(mklVersion, anotherRArch)
+    }
   }
 }

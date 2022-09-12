@@ -36,6 +36,13 @@
 //' fMatAdd(x, z) # x + z
 //' fMatSubtract(x, z) # x - z
 //' fMatSumDiffSquared(x, z) # sum((x-z)^2)
+//'
+//' w <- matrix(sample(9, 9), 3)
+//' fMatDet(w)
+//' fMatSort(w)
+//' fMatSort(w, 2)
+//' fMatSort(w, 2, FALSE)
+//' @rdname fast_matrix_ops
 //' @name fast_matrix_ops
 //' @export
 // [[Rcpp::export]]
@@ -112,11 +119,4 @@ double fMatDet(const arma::mat & x){
 arma::mat fMatSort(const arma::mat & x, int dim = 1, bool ascending = true){
   std::string sort_direction = ascending?"ascend":"descend";
   return arma::sort(x, sort_direction.c_str(), dim - 1);
-}
-
-//' @name fast_matrix_ops
-//' @export
-// [[Rcpp::export]]
-arma::mat fMatUnique(const arma::mat & x){
-  return arma::unique(x);
 }

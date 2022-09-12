@@ -203,17 +203,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fMatUnique
-arma::mat fMatUnique(const arma::mat& x);
-RcppExport SEXP _rmkl_fMatUnique(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatUnique(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // getMKLVersion
 std::string getMKLVersion();
 RcppExport SEXP _rmkl_getMKLVersion() {
@@ -263,7 +252,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rmkl_fMatSumDiffSquared", (DL_FUNC) &_rmkl_fMatSumDiffSquared, 2},
     {"_rmkl_fMatDet", (DL_FUNC) &_rmkl_fMatDet, 1},
     {"_rmkl_fMatSort", (DL_FUNC) &_rmkl_fMatSort, 3},
-    {"_rmkl_fMatUnique", (DL_FUNC) &_rmkl_fMatUnique, 1},
     {"_rmkl_getMKLVersion", (DL_FUNC) &_rmkl_getMKLVersion, 0},
     {"_rmkl_setMKLThreads", (DL_FUNC) &_rmkl_setMKLThreads, 1},
     {"_rmkl_getMKLThreads", (DL_FUNC) &_rmkl_getMKLThreads, 0},

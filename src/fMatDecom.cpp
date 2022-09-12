@@ -22,6 +22,7 @@
 //' Functions to do the decomposition by leveraging Intel MKL
 //'
 //' @param upper A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.
+//' @rdname fast_matrix_decomposition
 //' @name fast_matrix_decomposition
 //' @export
 // [[Rcpp::export]]

@@ -1,6 +1,6 @@
 ## rmkl
 
-The `rmkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO) by leveraging the conda packages, `mkl`, `mkl-include` and `intel-openmp`. However, it does not like MRO or `ropenblas` to directly affect R functions. `rmkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users. `rmkl` supports windows/OS X/Linux.
+The `rmkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO) by leveraging the Anaconda packages, `mkl`, `mkl-include` and `intel-openmp`. However, it does not like MRO or `ropenblas` to directly affect R functions. `rmkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users. `rmkl` supports windows/OS X/Linux. Besides, `rmkl` provides the ability to use Intel MKL in `Rcpp`, so you can leverage MKL functions widely in `mkl_blas.h`, `mkl_cblas.h`, `mkl_spblas.h`, `mkl_lapack.h` and `mkl_lapacke.h`.
 
 ### Speed-Up Performance for the Matrix Multiplication
 

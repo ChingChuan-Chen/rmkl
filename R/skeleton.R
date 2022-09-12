@@ -16,51 +16,34 @@
 ## along with rmkl. If not, see <http://www.gnu.org/licenses/>.
 
 #' @importFrom utils package.skeleton packageDescription
+#' @importFrom Rcpp compileAttributes
 #' @export
-rmkl.package.skeleton <- function(name = "anRpackage",
-                                        list = character(),
-                                        environment = .GlobalEnv,
-                                        path = ".",
-                                        force = FALSE,
-                                        code_files = character(),
-                                        example_code = TRUE) {
-
-  env <- parent.frame(1)
-
-  if (!length(list)) {
-    fake <- TRUE
-    assign("Rcpp.fake.fun", function() {}, envir = env)
-  } else {
-    fake <- FALSE
+rmkl.package.skeleton <- function(
+    name = "anRpackage",
+    path = "."
+) {
+  if(!requireNamespace("pkgKitten")) {
+    stop("You need to install R package pkgKitten before using rmkl.package.skeleton!")
   }
 
-  haveKitten <- requireNamespace("pkgKitten", quietly=TRUE)
-  skelFunUsed <- ifelse(haveKitten, pkgKitten::kitten, package.skeleton)
-  skelFunName <- ifelse(haveKitten, "kitten", "package.skeleton")
-  message("\nCalling ", skelFunName, " to create basic package.")
-
-  ## first let the traditional version do its business
-  call <- match.call()
-  call[[1]] <- skelFunUsed
-  if (! haveKitten) {                 # in the package.skeleton() case
-    if ("example_code" %in% names(call)) {
-      call[["example_code"]] <- NULL    # remove the example_code argument
-    }
-    if (fake) {
-      call[["list"]] <- "Rcpp.fake.fun"
-    }
+  if(!requireNamespace("energy")) {
+    stop("You need to install R package roxygen2 before using rmkl.package.skeleton!")
   }
 
-  tryCatch(eval(call, envir = env),
-           error = function(e) {
-             cat(paste(e, "\n")) # print error
-             stop(paste("error while calling `", skelFunName, "`", sep=""))
-           })
+  tryCatch(
+    pkgKitten::kitten(name, path),
+    error = function(e) {
+      cat(paste(e, "\n")) # print error
+      stop(paste("error while calling `", skelFunName, "`", sep=""))
+    }
+  )
+
+  ## clean up
+  root <- file.path(path, name)
+  unlink(file.path(root, "man"), recursive = TRUE)
+  file.remove(file.path(root, "R", "hello.R"))
 
   message("\nAdding rmkl settings")
-
-  ## now pick things up
-  root <- file.path(path, name)
 
   ## Add Rcpp to the DESCRIPTION
   DESCRIPTION <- file.path(root, "DESCRIPTION")
@@ -77,48 +60,51 @@ rmkl.package.skeleton <- function(name = "anRpackage",
     message(" >> added LinkingTo: Rcpp, rmkl")
   }
 
-  ## add a useDynLib to NAMESPACE,
-  NAMESPACE <- file.path(root, "NAMESPACE")
-  lines <- readLines(NAMESPACE)
-  if (! grepl("useDynLib", lines)) {
-    lines <- c(sprintf("useDynLib(%s)", name),
-               "importFrom(Rcpp, evalCpp)",        ## ensures Rcpp instantiation
-               lines)
-    writeLines(lines, con = NAMESPACE)
-    message(" >> added useDynLib and importFrom directives to NAMESPACE")
-  }
+  ## Add package document
+  pkgDoc <- file.path(root, "R", paste0(name, "-package.R"))
+  message("\n >> Adding package document")
+  lines <- c(
+    "#' anRpackage-package",
+    "#' @docType package",
+    "#' @name rmkl-package",
+    paste0("#' @useDynLib ", name),
+    "#' @importFrom Rcpp evalCpp",
+    "#' @importFrom rmkl CxxFlags",
+    "#' @importFrom rmkl LdFlags",
+    "NULL"
+  )
+  writeLines(lines, con = pkgDoc)
+  message(" >> added useDynLib, importFrom and flags directives to NAMESPACE")
 
   ## lay things out in the src directory
   src <- file.path(root, "src")
   if (!file.exists(src)) {
     dir.create(src)
   }
-  man <- file.path(root, "man")
-  if (!file.exists(man)) {
-    dir.create(man)
-  }
   skeleton <- system.file("skeleton", package = "rmkl")
+
+  ## add Makevars
+  message(" >> added src/Makevars")
   Makevars <- file.path(src, "Makevars")
-  if (!file.exists(Makevars)) {
-    file.copy(file.path(skeleton, "Makevars"), Makevars)
-    message(" >> added Makevars file with rmkl settings")
-  }
+  lines <- c(
+    'PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::CxxFlags()")',
+    'PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::LdFlags()")'
+  )
+  writeLines(lines, con = Makevars)
 
-  if (example_code) {
-    file.copy(file.path(skeleton, "rmkl_hello_world.cpp"), src)
-    message(" >> added example src file using Intel MKL")
-    file.copy(file.path(skeleton, "rmkl_hello_world.Rd"), man)
-    message(" >> added example Rd file for using Intel MKL")
+  ## copy example codes
+  file.copy(file.path(skeleton, "rmkl_hello_world.cpp"), src)
+  message(" >> added example src file using Intel MKL")
 
-    Rcpp::compileAttributes(root)
-    message(" >> invoked Rcpp::compileAttributes to create wrappers")
-  }
+  ## call Rcpp::compileAttributes to output cpp functions
+  compileAttributes(root)
+  message(" >> inoked Rcpp::compileAttributes to create wrappers")
 
-  if (fake) {
-    rm("Rcpp.fake.fun", envir = env)
-    unlink(file.path(root, "R"  , "Rcpp.fake.fun.R"))
-    unlink(file.path(root, "man", "Rcpp.fake.fun.Rd"))
-  }
+  ## call roxygen2::roxygenize to output cpp functions
+  roxygen2::roxygenize(root)
+  message(" >> inoked roxygen2::roxygenize to generate documents")
+  file.remove(file.path(root, "NAMESPACE"))
+  roxygen2::roxygenize(root)
 
   invisible(NULL)
 }
