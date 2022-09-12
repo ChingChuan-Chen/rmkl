@@ -1,4 +1,8 @@
 installMKL <- function(mklVersion) {
+  if (!dir.exists("inst/lib")) {
+    dir.create("inst/lib")
+  }
+
   sysname <- Sys.info()[["sysname"]]
   rArch <- .Platform$r_arch
 
@@ -15,7 +19,7 @@ installMKL <- function(mklVersion) {
 
   tempDir <- tempdir()
   repodataJson <- file.path(tempDir, "repodata.json")
-  cat("Download repodata...")
+  cat("Download repodata...\n")
   download.file(sprintf(repodataBaseUrl, condaArch), repodataJson, quiet = TRUE)
 
   extractSubstring <- function(str, pattern, general=FALSE) {
@@ -50,10 +54,10 @@ installMKL <- function(mklVersion) {
   downloadFileBaseUrl <- "https://anaconda.org/anaconda/%s/%s/download/%s/%s"
   apply(downloadFns, 1, function(v){
     bzFile <- file.path(tempDir, paste0(v[3], ".tar.bz2"))
-    cat(sprintf("Download %s.tar.gz from Anaconda repo...", v[3]))
+    cat(sprintf("Download %s.tar.gz from Anaconda repo...\n", v[1]))
     download.file(sprintf(downloadFileBaseUrl, v[3], v[2], condaArch, v[1]), bzFile, quiet = TRUE)
     destDir <- paste0(tempDir, "/", v[3])
-    cat(sprintf("Untar %s.tar.gz and copy...", v[3]))
+    cat(sprintf("Untar %s.tar.gz and copy...\n", v[1]))
     untar(bzFile, exdir = destDir)
     if (grepl("include", v[3])) {
       file.copy(paste0(destDir, "/Library/include/"), "inst/include", recursive = TRUE)
@@ -62,8 +66,13 @@ installMKL <- function(mklVersion) {
     }
   })
 
-  libDir <- paste(c("inst", "lib", if (nzchar(rArch)) rArch), collapse = "/")
+  cat("Copy and rename include folder...\n")
   incDir <- "inst/include/mkl"
+  unlink(incDir, recursive = TRUE)
   file.rename("inst/include/include", incDir)
+
+  cat("Copy and rename lib folder...\n")
+  libDir <- paste(c("inst", "lib", if (nzchar(rArch)) rArch), collapse = "/")
+  unlink(libDir, recursive = TRUE)
   file.rename("inst/lib/bin", libDir)
 }

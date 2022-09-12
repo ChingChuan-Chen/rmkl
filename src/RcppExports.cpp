@@ -12,6 +12,78 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// fMatChol
+arma::mat fMatChol(const arma::mat& x, bool upper);
+RcppExport SEXP _rmkl_fMatChol(SEXP xSEXP, SEXP upperSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type upper(upperSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatChol(x, upper));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSvd
+Rcpp::List fMatSvd(const arma::mat& x, bool economical);
+RcppExport SEXP _rmkl_fMatSvd(SEXP xSEXP, SEXP economicalSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type economical(economicalSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSvd(x, economical));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatEigen
+Rcpp::List fMatEigen(const arma::mat& x, bool is_symmetric);
+RcppExport SEXP _rmkl_fMatEigen(SEXP xSEXP, SEXP is_symmetricSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_symmetric(is_symmetricSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatEigen(x, is_symmetric));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatLu
+Rcpp::List fMatLu(const arma::mat& x, bool permutation_matrix);
+RcppExport SEXP _rmkl_fMatLu(SEXP xSEXP, SEXP permutation_matrixSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type permutation_matrix(permutation_matrixSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatLu(x, permutation_matrix));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSchur
+Rcpp::List fMatSchur(const arma::mat& x);
+RcppExport SEXP _rmkl_fMatSchur(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSchur(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatQr
+Rcpp::List fMatQr(const arma::mat& x, bool permutation_matrix, bool economical);
+RcppExport SEXP _rmkl_fMatQr(SEXP xSEXP, SEXP permutation_matrixSEXP, SEXP economicalSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type permutation_matrix(permutation_matrixSEXP);
+    Rcpp::traits::input_parameter< bool >::type economical(economicalSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatQr(x, permutation_matrix, economical));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fMatProd
 arma::mat fMatProd(const arma::mat& x, const arma::mat& y);
 RcppExport SEXP _rmkl_fMatProd(SEXP xSEXP, SEXP ySEXP) {
@@ -49,13 +121,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // fMatInv
-arma::mat fMatInv(const arma::mat& x);
-RcppExport SEXP _rmkl_fMatInv(SEXP xSEXP) {
+arma::mat fMatInv(const arma::mat& x, bool is_sym_pd);
+RcppExport SEXP _rmkl_fMatInv(SEXP xSEXP, SEXP is_sym_pdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(fMatInv(x));
+    Rcpp::traits::input_parameter< bool >::type is_sym_pd(is_sym_pdSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatInv(x, is_sym_pd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatPseudoInv
+arma::mat fMatPseudoInv(const arma::mat& x);
+RcppExport SEXP _rmkl_fMatPseudoInv(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatPseudoInv(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -95,6 +179,41 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fMatDet
+double fMatDet(const arma::mat& x);
+RcppExport SEXP _rmkl_fMatDet(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatDet(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatSort
+arma::mat fMatSort(const arma::mat& x, int dim, bool ascending);
+RcppExport SEXP _rmkl_fMatSort(SEXP xSEXP, SEXP dimSEXP, SEXP ascendingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< bool >::type ascending(ascendingSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatSort(x, dim, ascending));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fMatUnique
+arma::mat fMatUnique(const arma::mat& x);
+RcppExport SEXP _rmkl_fMatUnique(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(fMatUnique(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getMKLVersion
 std::string getMKLVersion();
 RcppExport SEXP _rmkl_getMKLVersion() {
@@ -128,13 +247,23 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rmkl_fMatChol", (DL_FUNC) &_rmkl_fMatChol, 2},
+    {"_rmkl_fMatSvd", (DL_FUNC) &_rmkl_fMatSvd, 2},
+    {"_rmkl_fMatEigen", (DL_FUNC) &_rmkl_fMatEigen, 2},
+    {"_rmkl_fMatLu", (DL_FUNC) &_rmkl_fMatLu, 2},
+    {"_rmkl_fMatSchur", (DL_FUNC) &_rmkl_fMatSchur, 1},
+    {"_rmkl_fMatQr", (DL_FUNC) &_rmkl_fMatQr, 3},
     {"_rmkl_fMatProd", (DL_FUNC) &_rmkl_fMatProd, 2},
     {"_rmkl_fMatTransProd", (DL_FUNC) &_rmkl_fMatTransProd, 2},
     {"_rmkl_fMatSolve", (DL_FUNC) &_rmkl_fMatSolve, 2},
-    {"_rmkl_fMatInv", (DL_FUNC) &_rmkl_fMatInv, 1},
+    {"_rmkl_fMatInv", (DL_FUNC) &_rmkl_fMatInv, 2},
+    {"_rmkl_fMatPseudoInv", (DL_FUNC) &_rmkl_fMatPseudoInv, 1},
     {"_rmkl_fMatAdd", (DL_FUNC) &_rmkl_fMatAdd, 2},
     {"_rmkl_fMatSubtract", (DL_FUNC) &_rmkl_fMatSubtract, 2},
     {"_rmkl_fMatSumDiffSquared", (DL_FUNC) &_rmkl_fMatSumDiffSquared, 2},
+    {"_rmkl_fMatDet", (DL_FUNC) &_rmkl_fMatDet, 1},
+    {"_rmkl_fMatSort", (DL_FUNC) &_rmkl_fMatSort, 3},
+    {"_rmkl_fMatUnique", (DL_FUNC) &_rmkl_fMatUnique, 1},
     {"_rmkl_getMKLVersion", (DL_FUNC) &_rmkl_getMKLVersion, 0},
     {"_rmkl_setMKLThreads", (DL_FUNC) &_rmkl_setMKLThreads, 1},
     {"_rmkl_getMKLThreads", (DL_FUNC) &_rmkl_getMKLThreads, 0},

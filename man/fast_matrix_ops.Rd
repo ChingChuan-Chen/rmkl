@@ -6,9 +6,13 @@
 \alias{fMatTransProd}
 \alias{fMatSolve}
 \alias{fMatInv}
+\alias{fMatPseudoInv}
 \alias{fMatAdd}
 \alias{fMatSubtract}
 \alias{fMatSumDiffSquared}
+\alias{fMatDet}
+\alias{fMatSort}
+\alias{fMatUnique}
 \title{Functions to use MKL to do the matrix calculations}
 \usage{
 fMatProd(x, y)
@@ -17,16 +21,30 @@ fMatTransProd(x, y)
 
 fMatSolve(x, y)
 
-fMatInv(x)
+fMatInv(x, is_sym_pd = FALSE)
+
+fMatPseudoInv(x)
 
 fMatAdd(x, y)
 
 fMatSubtract(x, y)
 
 fMatSumDiffSquared(x, y)
+
+fMatDet(x)
+
+fMatSort(x, dim = 1L, ascending = TRUE)
+
+fMatUnique(x)
 }
 \arguments{
 \item{x, y}{matrices}
+
+\item{is_sym_pd}{Whether the input matrix is symmetric/hermitian positive definite.}
+
+\item{dim}{The sorting dimention. 1 means row. 2 means column.}
+
+\item{ascending}{Whether to sort by ascending order.}
 }
 \value{
 The result matrices
