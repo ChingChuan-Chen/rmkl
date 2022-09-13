@@ -107,8 +107,8 @@ rmkl.package.skeleton <- function(
   message(" >> added src/Makevars")
   Makevars <- file.path(src, "Makevars")
   lines <- c(
-    'PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::CxxFlags()")',
-    'PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::LdFlags()")'
+    'PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklIncFlags()")',
+    'PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklLibFlags()")'
   )
   writeLines(lines, con = Makevars)
 

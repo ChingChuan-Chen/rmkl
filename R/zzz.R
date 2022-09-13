@@ -43,7 +43,14 @@ loadMklLibrary <- function(name) {
 
 .onLoad <- function(libname, pkgname) {
   is_windows <- Sys.info()[["sysname"]] == "Windows"
+
+  # load dll files
+  iomp5DllName <- ifelse(is_windows, "iomp5md", "iomp5")
+  .iomp5DllInfo <<- loadMklLibrary(iomp5DllName)
+  .mklRtDllInfo <<- loadMklLibrary("mkl_rt")
+
   if (!is_windows){
+    # Append MKL so files path in Linux
     pkgLibPath <- system.file("lib", package = "rmkl")
     linuxLocalRenv <- paste0(normalizePath("~/"), "/.Renviron")
     if (!grepl(pkgLibPath, Sys.getenv("LD_LIBRARY_PATH"))) {
@@ -51,12 +58,8 @@ loadMklLibrary <- function(name) {
     }
     cat("If you want to use this package with RStudio in UNIX, please check the document at GitHub:\n")
     cat("\thttps://github.com/ChingChuan-Chen/rmkl/blob/main/README.md")
-  }
-  iomp5DllName <- ifelse(is_windows, "iomp5md", "iomp5")
-  .iomp5DllInfo <<- loadMklLibrary(iomp5DllName)
-  .mklRtDllInfo <<- loadMklLibrary("mkl_rt")
-
-  if (is_windows) {
+  } else {
+    # Unable to load these files on Linux since the inter-dependency
     .mklCoreDllInfo        <<- loadMklLibrary("mkl_core")
     .mklIntelThreadDllInfo <<- loadMklLibrary("mkl_intel_thread")
     .mklIntelLp64DllInfo   <<- loadMklLibrary("mkl_intel_lp64")

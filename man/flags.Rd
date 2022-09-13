@@ -2,25 +2,31 @@
 % Please edit documentation in R/flags.R
 \name{flags}
 \alias{flags}
-\alias{LdFlags}
-\alias{CxxFlags}
+\alias{mklCxxFlags}
+\alias{mklLdFlags}
+\alias{rmklLibFlags}
+\alias{rmklIncFlags}
 \title{Compilation flags for rmkl}
 \usage{
-LdFlags()
+mklCxxFlags()
 
-CxxFlags()
+mklLdFlags()
+
+rmklLibFlags()
+
+rmklIncFlags()
 }
 \description{
 Output the compiler or linker flags required to build against `rmkl`.
 These functions are typically called from `Makevars` as follows:
 ```
-PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::CxxFlags()")
-PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::LdFlags()")
+PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklIncFlags()")
+PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklLibFlags()")
 ```
 \R packages using `rmkl` should also add the following to their `NAMESPACE` file:
 ```
-importFrom(rmkl, CxxFlags)
-importFrom(rmkl, LdFlags)
+importFrom(rmkl, rmklIncFlags)
+importFrom(rmkl, rmklLibFlags)
 ```
 This is necessary to ensure that \pkg{rmkl} is loaded and available.
 }

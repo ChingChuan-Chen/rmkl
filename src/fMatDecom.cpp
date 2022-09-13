@@ -24,6 +24,33 @@
 //' @param upper A Boolean value to indicate the output matrix is a upper matrix. False will return a lower matrix.
 //' @rdname fast_matrix_decomposition
 //' @name fast_matrix_decomposition
+//' @examples
+//' m <- matrix(c(5,1,1,3),2,2)
+//' fMatChol(m)
+//' all.equal(fMatChol(m), chol(m)) # It's the same to R
+//' fMatChol(m, FALSE) # lower CHOL matrix
+//'
+//' hilbert <- function(n) { i <- 1:n; 1 / outer(i - 1, i, "+") }
+//' X <- hilbert(9)[, 1:6]
+//' (s <- fMatSvd(X))
+//' D <- diag(as.vector(s$d))
+//' s$u[ , 1:6] %*% D %*% t(s$v) #  X = U D V'
+//' t(s$u[ , 1:6]) %*% X %*% s$v #  D = U' X V
+//'
+//' fMatEigen(cbind(c(1,-1), c(-1,1)), TRUE)
+//' fMatEigen(cbind(c(1,-1), c(-1,1)), FALSE) # Same, but different datatype
+//'
+//' X <- matrix(rnorm(9), 3, 3)
+//' res <- fMatLu(x, TRUE)
+//' # Note that L is generally not lower-triangular when permutation_matrix = FALSE
+//' res$P %*% res$L %*% res$U # X = P' L U
+//'
+//' schurRes <- fMatSchur(X)
+//' # Note that Schur decomposition is not unique in general.
+//' schurRes$U %*% schurRes$S %*% t(schurRes$U) # X = U S U'
+//'
+//' qrRes <- fMatQr(x)
+//' qrRes$Q %*% qrRes$R # X = Q R
 //' @export
 // [[Rcpp::export]]
 arma::mat fMatChol(const arma::mat & x, bool upper = true){

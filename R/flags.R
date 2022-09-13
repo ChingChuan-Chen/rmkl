@@ -23,27 +23,31 @@
 #' Output the compiler or linker flags required to build against `rmkl`.
 #' These functions are typically called from `Makevars` as follows:
 #' ```
-#' PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::CxxFlags()")
-#' PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::LdFlags()")
+#' PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklIncFlags()")
+#' PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "rmkl::rmklLibFlags()")
 #' ```
 #' \R packages using `rmkl` should also add the following to their `NAMESPACE` file:
 #' ```
-#' importFrom(rmkl, CxxFlags)
-#' importFrom(rmkl, LdFlags)
+#' importFrom(rmkl, rmklIncFlags)
+#' importFrom(rmkl, rmklLibFlags)
 #' ```
 #' This is necessary to ensure that \pkg{rmkl} is loaded and available.
 #'
 #' @name flags
 #' @rdname flags
-#' @aliases LdFlags CxxFlags
+#' @aliases mklCxxFlags mklLdFlags rmklLibFlags rmklIncFlags
 NULL
 
-rmklCxxFlags <- function() {
+#' @name flags
+#' @export
+mklCxxFlags <- function() {
   pkgIncDir <- system.file("include", package = "rmkl")
   paste0("-I'", pkgIncDir, "' -I'", pkgIncDir, "/mkl'")
 }
 
-rmklLdFlags <- function() {
+#' @name flags
+#' @export
+mklLdFlags <- function() {
   linkLibs <- if(Sys.info()[["sysname"]] == "Windows") {
     "-lmkl_intel_thread.2 -lmkl_rt.2 -lmkl_core.2 -liomp5md"
   } else {
@@ -54,13 +58,13 @@ rmklLdFlags <- function() {
 
 #' @name flags
 #' @export
-LdFlags <- function(){
+rmklLibFlags <- function(){
   cat(rmklLdFlags())
 }
 
 #' @name flags
 #' @export
-CxxFlags <- function(){
+rmklIncFlags <- function(){
   cat(rmklCxxFlags())
 }
 
@@ -72,7 +76,7 @@ inlineCxxPlugin <- function() {
     package = c("rmkl", "Rcpp")
   )
   settings <- getSettings()
-  settings$env$PKG_CXXFLAGS <- paste(settings$env$PKG_CXXFLAGS, rmklCxxFlags())
-  settings$env$PKG_LIBS <- paste(settings$env$PKG_LIBS, rmklLdFlags())
+  settings$env$PKG_CXXFLAGS <- paste(settings$env$PKG_CXXFLAGS, mklCxxFlags())
+  settings$env$PKG_LIBS <- paste(settings$env$PKG_LIBS, mklLdFlags())
   return(settings)
 }

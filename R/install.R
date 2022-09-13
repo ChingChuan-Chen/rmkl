@@ -18,12 +18,12 @@
 installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c()) {
   sysname <- Sys.info()[["sysname"]]
   if (sysname == "Windows") {
-    # check whether there is another R-Arch
+    # check whether there is another R-Arch that is not downloaded
     rArchList <- setdiff(list.dirs(
       paste0(R.home(), "/bin"), recursive = FALSE, full.names = FALSE
-    ), downloadedRArch)
-  	if (length(rArchList) > 1) {
-        anotherRArch <- setdiff(rArchList, rArch)
+    ), c(rArch, downloadedRArch))
+  	if (length(rArchList) > 0) {
+        anotherRArch <- rArchList[1]
   	} else {
   	  anotherRArch <- ""
   	}
@@ -37,7 +37,7 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c
         file.exists(paste0("inst/lib/", rArch, "/libiomp5md.dll"))) {
       cat(paste0("Intel MKL library for ", rArch, " has downloaded.\n"))
       if (anotherRArch != "") {
-        installMKL(mklVersion, anotherRArch, rArch)
+        installMKL(mklVersion, anotherRArch, c(downloadedRArch, rArch))
       }
       return(invisible(NULL))
     } else if (sysname != "Windows" && file.exists("inst/lib/libmkl_core.so.2") &&
@@ -144,7 +144,7 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c
 
   # download Intel MKL for another arch on Windows
   if (sysname == "Windows" && anotherRArch != "") {
-    installMKL(mklVersion, anotherRArch, rArch)
+    installMKL(mklVersion, anotherRArch, c(downloadedRArch, rArch))
   }
 
   cat("Intel MKL is downloaded successfully!\n")

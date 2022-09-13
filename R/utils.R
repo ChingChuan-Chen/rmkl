@@ -19,8 +19,8 @@
 
 mklRoot <- function() {
   rArch <- .Platform$r_arch
-  parts <- c("lib", if (nzchar(rArch)) rArch)
-  libDir <- paste(parts, collapse = "/")
+  pathList <- c("lib", if (nzchar(rArch)) rArch)
+  libDir <- paste(pathList, collapse = "/")
   system.file(libDir, package = "rmkl")
 }
 
