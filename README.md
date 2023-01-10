@@ -51,11 +51,12 @@ EOF
 
 - [x] Support Windows.
 - [x] Support Linux.
-- [ ] GitHub Actions to release binary packages.
-- [ ] Validate on Mac OS X with Intel.
-- [ ] Detect Apple M1/M2 processor for unsupported archs.
-- [ ] Include [MKL random library](https://anaconda.org/conda-forge/mkl_random).
 - [ ] Find an appropriate name for the package since there is an R package that is called `RMKL`.
+- [ ] Include [MKL random library](https://anaconda.org/conda-forge/mkl_random).
+- [ ] Have more customized functions to leverage Intel MKL.
+- [ ] GitHub Actions to release binary packages.
+- [ ] Support and validate on Mac OS X with Intel Processors.
+- [ ] Test and validate on Mac OS X with Apple M1/M2 processors. (MKL is probably unsupported for M1/M2 processors.)
 - [ ] On the CRAN (Probably not).
 
 ## License
