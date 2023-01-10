@@ -2,7 +2,7 @@
 
 ## Description
 
-The `r-mkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO) by leveraging the Anaconda packages, `mkl`, `mkl-include` and `intel-openmp`. However, it does not like MRO or `ropenblas` to directly affect R functions. `rmkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users. `r-mkl` supports windows/OS X/Linux. Besides, `r-mkl` provides the ability to use Intel MKL in `Rcpp`, so you can leverage MKL functions widely in `mkl_blas.h`, `mkl_cblas.h`, `mkl_spblas.h`, `mkl_lapack.h` and `mkl_lapacke.h`.
+The `r-mkl` package aims to empower R with Intel MKL like Microsoft R Open (MRO) by leveraging the Anaconda packages, `mkl`, `mkl-include` and `intel-openmp`. However, it does not like MRO or `ropenblas` to directly affect R functions. `r-mkl` aims to act like a plug-in for R users and support dynamic linkage for Rcpp users. `r-mkl` supports windows/OS X/Linux. Besides, `r-mkl` provides the ability to use Intel MKL in `Rcpp`, so you can leverage MKL functions widely in `mkl_blas.h`, `mkl_cblas.h`, `mkl_spblas.h`, `mkl_lapack.h` and `mkl_lapacke.h`.
 
 ## Installation
 
@@ -36,7 +36,7 @@ You just need to import the package and leverage the functions to do what you wo
 
 Since `.so` files from Intel MKL are unable to load in R with `dyn.load`, we use `.Renviron` to load `.so` files. In [line 53-60 of zzz.R](https://github.com/ChingChuan-Chen/r-mkl/blob/main/R/zzz.R#L53-L60), we append `lib` folder from `r-mkl` to `.Renviron` file every time when R starts to make R find the Intel MKL `.so` files from `r-mkl`.
 
-### Using `r-rmkl` with `RStudio` in UNIX
+### Using `r-mkl` with `RStudio` in UNIX
 
 Since `RStudio` loads the `LD_LIBRARY_PATH` before starting the R session used by user, you have to have the privilege of the system administrator to run the following command to append the `rsession-ld-library-path` in `RStudio` config which the path is `/etc/rstudio/rserver.conf`.
 
@@ -55,10 +55,11 @@ EOF
 - [ ] Validate on Mac OS X with Intel.
 - [ ] Detect Apple M1/M2 processor for unsupported archs.
 - [ ] Include [MKL random library](https://anaconda.org/conda-forge/mkl_random).
+- [ ] Find an appropriate name for the package since there is an R package that is called `RMKL`.
 - [ ] On the CRAN (Probably not).
 
 ## License
 
-The `rmkl` package is made available under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) license.
+The `r-mkl` package is made available under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html) license.
 
 To use Intel MKL, you should agree with the (Intel Simplified Software License)[https://www.intel.com/en-us/license/intel-simplified-software-license], as described at (Intel MKL License FAQ)[https://www.intel.com/content/www/us/en/developer/articles/license/onemkl-license-faq.html].
