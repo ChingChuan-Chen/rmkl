@@ -18,10 +18,10 @@ You may get the following results by running `inst/example/link_mkl_cblas.cpp`.
 
 ```
 Unit: milliseconds
-            expr       min        lq      mean    median        uq     max neval
-       R default 22.616301 23.267201 26.608191 23.929550 31.239301 43.1686   100
- r-mkl-Armadillo  2.156601  2.396401  2.801035  2.506151  2.643151 11.5749   100
-     r-mkl-cblas  1.623601  1.848351  2.367477  1.951401  2.040700 12.0597   100
+               expr       min        lq      mean    median        uq     max neval
+          R default 22.616301 23.267201 26.608191 23.929550 31.239301 43.1686   100
+ rmkl-RcppArmadillo  2.156601  2.396401  2.801035  2.506151  2.643151 11.5749   100
+         rmkl-cblas  1.623601  1.848351  2.367477  1.951401  2.040700 12.0597   100
    
 # This results are run on R-4.2.1 (Windows 11) with AMD 2990WX and 128 GB.
 ```
