@@ -29,7 +29,7 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c
   	}
   } else {
 	  anotherRArch <- ""
-	}
+  }
 
   # check whether to download MKL from Anaconda
   if (file.exists("inst/include/mkl/mkl.h")) {
@@ -91,6 +91,7 @@ installMKL <- function(mklVersion, rArch = .Platform$r_arch, downloadedRArch = c
   }))
 
   # find the version
+  # we thought that packages with the same version must be compatible to avoid the incompatibility between versions
   if (nrow(pkgMat) > 3) {
     versionCnts <- tapply(rep(1, nrow(pkgMat)), pkgMat[,2], sum)
     downloadVersion <- max(names(versionCnts[versionCnts == 3]))
