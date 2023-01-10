@@ -43,9 +43,9 @@ all.equal(mkl_cblas_dgemm(x, z), fMatProd(x, z))
 if (require("microbenchmark")) {
   library(microbenchmark)
   microbenchmark(
-    default = x %*% z,
-    arma = fMatProd(x, z),
-    cblas = mkl_cblas_dgemm(x, z),
+    `R default` = x %*% z,
+    `rmkl-RcppArmadillo` = fMatProd(x, z),
+    `rmkl-cblas` = mkl_cblas_dgemm(x, z),
     times = 100L
   )
 }
